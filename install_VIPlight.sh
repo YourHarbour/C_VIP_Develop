@@ -9,7 +9,7 @@ appEnvPath=$(realpath ${appEnvPath/\~/$HOME})
 echo -e "\nInstallation location (first position parameter): $appEnvPath"
 echo -e "Warning: The above env will be removed if it exists!"
 echo "Wait for 10 seconds, use Ctrl+C to terminate"
-for i in {10..1}; do echo -ne "$i\033[0K\r"; sleep 1; done;
+for i in {3..1}; do echo -ne "$i\033[0K\r"; sleep 1; done;
 
 set -e
 exePath=$(readlink -e $(dirname $0))
@@ -28,7 +28,7 @@ source $condaPath/etc/profile.d/conda.sh
 
 ## create conda env
 conda env remove -p $appEnvPath
-conda create -y python=3.8.15 mamba=0.15.3 git=2.39.1 jq=1.6 nodejs=18.12.1 -c conda-forge -p $appEnvPath #nodejs=13.13.0
+conda create -y python=3.9 mamba=0.15.3 git=2.39.1 jq=1.6 nodejs=18.12.1 -c conda-forge -p $appEnvPath #nodejs=13.13.0
 
 sed "s|CONDA_PATH|$appEnvPath|g" env_yml/VIPlight.yml > env_yml/VIPlight_local.yml
 if [[ -n "$CONDA_SSL" ]] &&  [[ -f "$CONDA_SSL" ]]; then
@@ -44,26 +44,27 @@ which python
 pip install --force-reinstall flask==2.2.3 flask-cors==3.0.10 flask-restful==0.3.9 flask-talisman==1.0.0 werkzeug==2.2.3 anndata==0.8.0 h5py==3.8.0 pandas==1.5.3 numpy==1.22.0
 
 ## config the env with cellxgene
-rm -fr cellxgene
-git clone https://github.com/chanzuckerberg/cellxgene.git
+#rm -fr cellxgene
+#git clone https://github.com/YourHarbour/Dissertation.git
+#mv Dissertation cellxgene
 cd cellxgene
-git checkout f48d06fb9043771d7370ee9ac0dc9de8ae6ad888 # v1.1.1
+#git checkout f48d06fb9043771d7370ee9ac0dc9de8ae6ad888 # v1.1.1
 
 ## update the client-side source code of cellxgene for VIP
-echo -e "\nwindow.store = store;" >> client/src/reducers/index.js
-sed -i "s|<div id=\"root\"></div>|$(sed -e 's/[&\\/]/\\&/g; s/|/\\|/g; s/$/\\/;' -e '$s/\\$//' ../index_template.insert)\n&|" "client/index_template.html"
-sed -i "s|logoRelatedPadding = 50|logoRelatedPadding = 60|" "client/src/components/leftSidebar/index.js"
-## update the cellxgene title to cellxgene VIP
-sed -i "s|title=\"cellxgene\"|title=\"cellxgene VIP\"|" "client/src/components/app.js"
-## modify zoom/pan default
-sed -i "s|const *scaleMax *= *[0-9\.]\+|const scaleMax = 50000|; s|const *scaleMin *= *[0-9\.]\+|const scaleMin = 0.1|; s|const *panBound *= *[0-9\.]\+|const panBound = 80|" "client/src/util/camera.js"
-
-## update the server-side source code of cellxgene for VIP
-echo '
-from server.app.VIPInterface import route
-@webbp.route("/VIP", methods=["POST"])
-def VIP():
-    return route(request.data,current_app.app_config)' >> server/app/app.py
+#echo -e "\nwindow.store = store;" >> client/src/reducers/index.js
+#sed -i "s|<div id=\"root\"></div>|$(sed -e 's/[&\\/]/\\&/g; s/|/\\|/g; s/$/\\/;' -e '$s/\\$//' ../index_template.insert)\n&|" "client/index_template.html"
+#sed -i "s|logoRelatedPadding = 50|logoRelatedPadding = 60|" "client/src/components/leftSidebar/index.js"
+### update the cellxgene title to cellxgene VIP
+#sed -i "s|title=\"cellxgene\"|title=\"cellxgene VIP\"|" "client/src/components/app.js"
+### modify zoom/pan default
+#sed -i "s|const *scaleMax *= *[0-9\.]\+|const scaleMax = 50000|; s|const *scaleMin *= *[0-9\.]\+|const scaleMin = 0.1|; s|const *panBound *= *[0-9\.]\+|const panBound = 80|" "client/src/util/camera.js"
+#
+### update the server-side source code of cellxgene for VIP
+#echo '
+#from server.app.VIPInterface import route
+#@webbp.route("/VIP", methods=["POST"])
+#def VIP():
+#    return route(request.data,current_app.app_config)' >> server/app/app.py
 ## install cellxgene
 echo "cellxgene compiling ..."
 make pydist
