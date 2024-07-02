@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://interactivereport.github.io/cellxgene_VIP/static/gridstack/gridstack.min.css">
     <link rel="stylesheet" type="text/css" href="https://interactivereport.github.io/cellxgene_VIP/static/gridstack/gridstack-extra.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.12/dist/igv.min.js"></script>
     <script src="https://interactivereport.github.io/cellxgene_VIP/static/gridstack/gridstack-h5.js"></script>
     <!-- for datatables -->
     <link rel="stylesheet" type="text/css" href="https://interactivereport.github.io/cellxgene_VIP/static/DataTables/datatables.min.css">
@@ -36,6 +37,7 @@
     <script src="https://interactivereport.github.io/cellxgene_VIP/static/testVIP.js"></script>
     <!--  <script src="static/testVIP.js"></script>-->
     <!--  end -->
+
     <style>
       .dropup,
       .dropdown {
@@ -559,6 +561,7 @@
   <div id="panel-left">
     <div class="tab">
       <button class="tablinks" onclick="selFun(event, 'ADDG')"><b>Add Genes</b></button>
+      <button class="tablinks" onclick="selFun(event, 'ATACT')"><b>ATAC Track</b></button>
       <button class="tablinks" onclick="selFun(event, 'SGV');defaultTopSel('SGV','SGVsingle')">Violin</button>
       <button class="tablinks" onclick="selFun(event, 'HEAT')">Heatmap</button>
       <button class="tablinks" onclick="selFun(event, 'EMBED')">Embedding Plot</button>
@@ -620,6 +623,12 @@
       <p id="ABBRgrp"></p>
       <p id="ABBRtable"></p>
     </div><!--ABBR-->
+
+    <div id="ATACT" class="tabcontent">
+      <h3>Show ATAC Track of Gene</h3>
+      <div id="igv-div">
+      </div>
+    </div>
 
     <div id="ADDG" class="tabcontent">
       <h3>Add genes of interest for plotting <a href="https://interactivereport.github.io/cellxgene_VIP/tutorial/docs/how-to-use-cellxgene-vip.html#vip-add-genes-gene-sets" target="_blank"><i class="fa fa-question-circle" style="font-size:20px"></i></a></h3>
@@ -1849,6 +1858,30 @@ $(document).ready(function(){
     gSetFile.onchange 
 })
 
+function loadATAC(igvDiv){
+  console.log(igvDiv);
+  igvDiv.innerHTML = "";
+  // const track = window.store.getState().config.atac_track;
+  console.log('must loading')
+  // console.log(track)
+  const config = {
+    reference: "hg38",
+    locus: "myc",
+    tracks: [
+      {
+        name: "BigWig",
+        url: "http://localhost:5005/get_atac_tracks_u",
+        color: "rgb(0,150,150)",
+        type: "wig",
+        format: "bigwig"
+      },
+    ]
+  }
+  igv.createBrowser(igvDiv, config)
+          .then(function (browser) {
+            console.log("Created IGV browser");
+          })
+}
 function printNotebook(){
     var html = $('#CLIresize').html();
     var mywin=window.open('','_blank');
@@ -1859,7 +1892,6 @@ function printNotebook(){
     mywin.document.write(html);
     mywin.document.close();
 }
-
 function checkLoading(){
     if(!window.store || !window.store.getState().categoricalSelection || !window.store.getState().annoMatrix._cache.obs.__columns){
       return false;
@@ -2297,6 +2329,21 @@ function init(){
     //ABBRinit
     var grps = Object.keys(window.store.getState().categoricalSelection).sort();
     var grpL = window.store.getState().annoMatrix.schema.annotations.obsByName;
+    console.log(window.store.getState())
+    var track = window.store.getState().config.atac_track;
+    var igvDiv = document.getElementById("igv-div");
+    console.log(track)
+    if (track !== "None"){
+      var loadButton = document.createElement('button')
+      loadButton.textContent = 'Click to load ATAC Track'
+      loadButton.addEventListener('click', function () {
+        loadATAC(igvDiv);
+      })
+      igvDiv.appendChild(loadButton)
+      // loadATAC(igvDiv);
+    }else{
+      igvDiv.innerText = "No ATAC Track Loaded."
+    }
     var htmlCheck= "";
     for(i=0;i<grps.length;i++){
       var one = grps[i];
