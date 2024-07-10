@@ -8,8 +8,8 @@ Make an improved version of cellxgene and cellxgene_VIP extension.
 3. Support multi-mapping display in one window and sync highlight of cells in mappings.
 
 # Code Source
-1. cellxgene from official [cellxgene](https://github.com/chanzuckerberg/cellxgene) repo in v1.2.0
-2. cellxgene_VIP from official [cellxgene_VIP](https://interactivereport.github.io/cellxgene_VIP/cellxgene_VIP.png?raw=true "cellxgene_VIP")
+1. cellxgene forked from official [cellxgene](https://github.com/chanzuckerberg/cellxgene) repo in v1.2.0
+2. cellxgene_VIP forked from official [cellxgene_VIP](https://interactivereport.github.io/cellxgene_VIP/cellxgene_VIP.png?raw=true "cellxgene_VIP")
 
 # Pre-processing
 ## Create muon data
