@@ -44,6 +44,11 @@ Install by the shell script
 ```
 Users can change the conda env location by changing ```appPATH``` in the above script.
 
+# Pre-build dataset for demo
+1. Processed [pbmc3k dataset](https://drive.google.com/drive/folders/1S04oOsvj0u3Kz-oO8g9yOyAWLxTZbCH1?usp=sharing)  
+   Origin from [10xgenomcse](https://www.10xgenomics.com/resources/datasets/frozen-human-healthy-brain-tissue-3-k-1-standard-2-0-0)  
+   Processed follow the steps by [muon data official pbmc3k tutorial](https://muon-tutorials.readthedocs.io/en/latest/single-cell-rna-atac/brain3k/1-Processing-and-Integration.html)
+
 # Launch the application
 1. Launch the VIP by (all input arguments the same as [cellxgene](https://github.com/chanzuckerberg/cellxgene), with support of muon(.h5mu) dataset.
 ```
