@@ -2342,7 +2342,7 @@ function init(){
       igvDiv.appendChild(loadButton)
       // loadATAC(igvDiv);
     }else{
-      igvDiv.innerText = "No ATAC Track Loaded."
+      igvDiv.innerText =  'No ATAC Track Loaded. You could use -atac <datapath> or --atac_track <datapath> to load your ATAC Track (.bigwig/.bw).'
     }
     var htmlCheck= "";
     for(i=0;i<grps.length;i++){
