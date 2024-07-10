@@ -1,10 +1,22 @@
-# What's new
-* Upgrade to cellxgene v 1.1.1. After pull, please run "config.sh"
-* Install new modules if needed, e.g., pip install anndata==0.8.0
 
-# Cellxgene VIP unleashes full power of interactive visualization and integrative analysis of scRNA-seq, spatial transcriptomics, and multiome data
 
-To meet the growing demands from scientists to effectively extract deep insights from single cell RNA sequencing, spatial transcriptomics, and emerging multiome datasets, we developed cellxgene VIP (Visualization In Plugin), a frontend interactive visualization plugin of cellxgene framework, which greatly expanded capabilities of the base tool in the following aspects. First, it generates a comprehensive set of over eighteen commonly used quality control and analytical plots in high resolution with highly customizable settings in real time. Second, it provides more advanced analytical functions to gain insights on cellular compositions and deep biology, such as marker gene identification, differential gene expression analysis, and gene set enrichment analysis. Third, it empowers advanced users to perform analysis in a Jupyter Notebook like environment, dubbed Command Line Interface (CLI) by programming in Python and/or R directly without limiting themselves to functional modules available via graphical user interface (GUI). Finally, it pioneers methods to visualize multi-modal data, such as spatial transcriptomics embedding aligned with histological image on one slice or multiple slices in a grid format, and the latest 10x Genomic Multiome dataset where both DNA accessibility and gene expression in the same cells are measured, under the same framework in an integrative way to fully leverage the functionalities mentioned above. Taken together, the open-source tool makes large scale single cell data visualization and analysis more accessible to biologists in a user-friendly manner and fosters computational reproducibility by simplifying data and code reuse through the CLI.  Going forward, it has the potential to become a crowdsourcing ecosystem for the scientific community to contribute even more modules to the Swiss Army knife of single cell data exploration tools.
+# Project Aims
+Make an improved version of cellxgene and cellxgene_VIP extension.
+1. Now accept muon dataset (.h5mu)
+2. Add support for ATAC Track display
+3. Support multi mapping display in one window and sync highlight of cells in mappings.
+
+# Code Source
+1. cellxgene from official [cellxgene](https://github.com/chanzuckerberg/cellxgene) repo in v1.2.0
+2. cellxgene_VIP from official [cellxgene_VIP](https://interactivereport.github.io/cellxgene_VIP/cellxgene_VIP.png?raw=true "cellxgene_VIP")
+
+# Pre-processing
+## Create muon data
+### Option one
+Follow the jupyter notebook tutorials in muon_tutorial folder. 
+Most of them are learned from [muon data official tutorial](https://muon-tutorials.readthedocs.io/en/latest/index.html).
+### Option two (**Recommend**)
+Please follow the [muon data official tutorial](https://muon-tutorials.readthedocs.io/en/latest/index.html).
 
 ![cellxgene_VIP](https://interactivereport.github.io/cellxgene_VIP/cellxgene_VIP.png?raw=true "cellxgene_VIP")
 **Figure 1 | cellxgene VIP serves as an ecosystem of analytical modules that provide essential functions for interactive visualization and generation of publication-ready plots.** Individual plots were assembled by bioInfograph22 with zoomable feature available at https://bit.ly/2QqdMg3 that is best viewed by Chrome.
