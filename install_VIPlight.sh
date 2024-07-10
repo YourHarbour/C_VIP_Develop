@@ -44,28 +44,28 @@ which python
 pip install --force-reinstall flask==2.2.3 flask-cors==3.0.10 flask-restful==0.3.9 flask-talisman==1.0.0 werkzeug==2.2.3 anndata==0.8.0 h5py==3.8.0 pandas==1.5.3 numpy==1.22.0
 
 ## config the env with cellxgene
-#rm -fr cellxgene
-#git clone https://github.com/YourHarbour/Dissertation.git
-#mv Dissertation cellxgene
+rm -fr cellxgene
+git clone https://github.com/YourHarbour/cellxgene_MUON_Extension.git
+mv cellxgene_MUON_Extension cellxgene
 cd cellxgene
 #git checkout f48d06fb9043771d7370ee9ac0dc9de8ae6ad888 # v1.1.1
 
-## update the client-side source code of cellxgene for VIP
-#echo -e "\nwindow.store = store;" >> client/src/reducers/index.js
-#sed -i "s|<div id=\"root\"></div>|$(sed -e 's/[&\\/]/\\&/g; s/|/\\|/g; s/$/\\/;' -e '$s/\\$//' ../index_template.insert)\n&|" "client/index_template.html"
-#sed -i "s|logoRelatedPadding = 50|logoRelatedPadding = 60|" "client/src/components/leftSidebar/index.js"
-### update the cellxgene title to cellxgene VIP
-#sed -i "s|title=\"cellxgene\"|title=\"cellxgene VIP\"|" "client/src/components/app.js"
-### modify zoom/pan default
-#sed -i "s|const *scaleMax *= *[0-9\.]\+|const scaleMax = 50000|; s|const *scaleMin *= *[0-9\.]\+|const scaleMin = 0.1|; s|const *panBound *= *[0-9\.]\+|const panBound = 80|" "client/src/util/camera.js"
-#
-### update the server-side source code of cellxgene for VIP
-#echo '
-#from server.app.VIPInterface import route
-#@webbp.route("/VIP", methods=["POST"])
-#def VIP():
-#    return route(request.data,current_app.app_config)' >> server/app/app.py
-## install cellxgene
+# update the client-side source code of cellxgene for VIP
+echo -e "\nwindow.store = store;" >> client/src/reducers/index.js
+sed -i "s|<div id=\"root\"></div>|$(sed -e 's/[&\\/]/\\&/g; s/|/\\|/g; s/$/\\/;' -e '$s/\\$//' ../index_template.insert)\n&|" "client/index_template.html"
+sed -i "s|logoRelatedPadding = 50|logoRelatedPadding = 60|" "client/src/components/leftSidebar/index.js"
+## update the cellxgene title to cellxgene VIP
+sed -i "s|title=\"cellxgene\"|title=\"cellxgene VIP\"|" "client/src/components/app.js"
+## modify zoom/pan default
+sed -i "s|const *scaleMax *= *[0-9\.]\+|const scaleMax = 50000|; s|const *scaleMin *= *[0-9\.]\+|const scaleMin = 0.1|; s|const *panBound *= *[0-9\.]\+|const panBound = 80|" "client/src/util/camera.js"
+
+# update the server-side source code of cellxgene for VIP
+echo '
+from server.app.VIPInterface import route
+@webbp.route("/VIP", methods=["POST"])
+def VIP():
+    return route(request.data,current_app.app_config)' >> server/app/app.py
+# install cellxgene
 echo "cellxgene compiling ..."
 make pydist
 echo "cellxgene installing ..."
