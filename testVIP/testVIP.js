@@ -16,6 +16,68 @@ function testVIP(eID){
   //All plots testing sequentially in testVIPimgGet function, since the async data retriving
 }
 
+function testATACTrackPanel(){
+  let allTabButtons = document.getElementsByClassName('tablinks')
+  const hasATACTrack = allTabButtons.some(button => button.innerText === 'ATAC Track');
+  if (hasATACTrack) {
+    console.log('The ATAC Track exists.');
+  } else {
+      console.log('The ATAC Track not exists.');
+  }
+}
+
+function testATACLoaded(){
+  let allTabButtons = document.getElementsByClassName('tablinks')
+  const hasATACTrack = allTabButtons.some(button => button.innerText === 'ATAC Track');
+  if (hasATACTrack) {
+    console.log('The ATAC Track exists.');
+    const buttonsArray = Array.from(buttonsHTMLCollection);
+    const atacTrackButton = buttonsArray.find(button => button.innerText === 'ATAC Track');
+    atacTrackButton.click();
+    console.log('Clicked theATAC track button.');
+    var igvDivText = document.getElementById("igv-div").innerText;
+    let correctlyLoaded = igvDivText != 'No ATAC Track Loaded. You could use -atac <datapath> or --atac_track <datapath> to load your ATAC Track (.bigwig/.bw).'
+    if (correctlyLoaded){
+      console.log('ATAC load correctly.')
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          console.log('Success load bigwig from server.')
+        }
+      }
+      xhr.open('GET', 'http://localhost:5005/get_atac_tracks_u', true);
+      xhr.send(null);
+    }else{
+      console.log('ATAC load failed.')
+    }
+  } else {
+    console.log('The ATAC Track not exists.');
+  }
+}
+
+function testATACNotLoaded(){
+  let allTabButtons = document.getElementsByClassName('tablinks')
+  const hasATACTrack = allTabButtons.some(button => button.innerText === 'ATAC Track');
+  if (hasATACTrack) {
+    console.log('The ATAC Track exists.');
+    const buttonsArray = Array.from(buttonsHTMLCollection);
+    const atacTrackButton = buttonsArray.find(button => button.innerText === 'ATAC Track');
+    atacTrackButton.click();
+    console.log('Clicked theATAC track button.');
+    var igvDivText = document.getElementById("igv-div").innerText;
+    let correctlyLoaded = igvDivText != 'No ATAC Track Loaded. You could use -atac <datapath> or --atac_track <datapath> to load your ATAC Track (.bigwig/.bw).'
+    if (correctlyLoaded){
+      console.log('ATAC load incorrectly.')
+    }else{
+      console.log('ATAC load correctly.')
+    }
+  } else {
+    console.log('The ATAC Track not exists.');
+  }
+}
+
+
+
 function testVIPhtmladd(eID,message){
   $("#"+eID).html($("#"+eID).html()+message);
 }
