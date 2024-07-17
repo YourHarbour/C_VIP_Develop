@@ -1852,36 +1852,13 @@ var VIPCellSelectionMsg = "Please use selection tools to put cells into selectio
 var VIPGeneSelectionMsg = "Please choose a gene to plot";
 var uniqID = 'VIPtesting';
 var loadingCycle = 0;
+var enableCORS = true;
 
 $(document).ready(function(){
     let gSetFile=document.getElementById('Geneset_file');
     gSetFile.onchange 
 })
 
-function loadATAC(igvDiv){
-  console.log(igvDiv);
-  igvDiv.innerHTML = "";
-  // const track = window.store.getState().config.atac_track;
-  console.log('must loading')
-  // console.log(track)
-  const config = {
-    reference: "hg38",
-    locus: "myc",
-    tracks: [
-      {
-        name: "BigWig",
-        url: "http://localhost:5005/get_atac_tracks_u",
-        color: "rgb(0,150,150)",
-        type: "wig",
-        format: "bigwig"
-      },
-    ]
-  }
-  igv.createBrowser(igvDiv, config)
-          .then(function (browser) {
-            console.log("Created IGV browser");
-          })
-}
 function printNotebook(){
     var html = $('#CLIresize').html();
     var mywin=window.open('','_blank');
@@ -2319,6 +2296,188 @@ function enableCOXMX(){
     }
   });
 }
+
+function clearATACScreen(igvDiv){
+  igvDiv.innerHTML = '';
+}
+
+function createRadio(id, labelText, checked) {
+  const radio = document.createElement('input');
+  radio.type = 'radio';
+  radio.id = id;
+  radio.name = 'corsOption'; // 设置相同的 name，以确保只能选择一个
+  radio.value = id;
+  radio.checked = checked;
+
+  const label = document.createElement('label');
+  label.htmlFor = id;
+  label.textContent = labelText;
+
+  const radioContainer = document.createElement('div');
+  radioContainer.appendChild(radio);
+  radioContainer.appendChild(label);
+
+  return radioContainer;
+}
+
+function initATACWelcomeScreen(igvDiv){
+
+  // 创建“启用CORS”单选按钮
+  const enableCorsRadio = createRadio('enableCORS', 'Enable CORS Service', true);
+  igvDiv.appendChild(enableCorsRadio);
+
+  // 创建“不适用CORS”单选按钮
+  const disableCorsRadio = createRadio('disableCORS', 'Not Enable CORS Service', false);
+  igvDiv.appendChild(disableCorsRadio);
+
+  enableCorsRadio.addEventListener('click', function () {
+    enableCORS = true;
+  });
+
+  disableCorsRadio.addEventListener('click', function () {
+    enableCORS = false;
+  });
+
+  const confirmButton = document.createElement('button');
+  confirmButton.textContent = 'Confirm';
+  confirmButton.addEventListener('click', function () {
+    console.log(enableCORS)
+    initURIInputScreen(igvDiv);
+  });
+  igvDiv.appendChild(confirmButton)
+}
+
+function renderATACTrack(igvDiv, urls) {
+  console.log(urls)
+  loadATAC(igvDiv, urls)
+  // 这里可以添加更多逻辑
+}
+
+function initURIInputScreen(igvDiv) {
+  clearATACScreen(igvDiv);
+  let inputUrls = [];
+  const inputContainer = document.createElement('div');
+
+  const initialInputWrapper = createInputWrapper(false); // 第一个输入框不能删除
+  inputContainer.appendChild(initialInputWrapper);
+
+  const addButton = document.createElement('button');
+  addButton.textContent = 'Add URL Input';
+  addButton.style.display = 'block';
+  addButton.style.margin = '10px 0';
+  addButton.addEventListener('click', function () {
+    const newInputWrapper = createInputWrapper(true); // 新增的输入框可以删除
+    inputContainer.insertBefore(newInputWrapper, addButton);
+  });
+  inputContainer.appendChild(addButton);
+
+  const loadButton = document.createElement('button');
+  loadButton.textContent = 'Load';
+  loadButton.style.position = 'absolute';
+  loadButton.style.right = '20px';
+  loadButton.style.bottom = '20px';
+  loadButton.addEventListener('click', function () {
+    inputUrls = [];
+    const inputElements = inputContainer.querySelectorAll('input[type="text"]');
+    inputElements.forEach((input) => {
+      const trimmedValue = input.value.trim(); // 去除首尾空白
+      if (trimmedValue) {
+        inputUrls.push(trimmedValue);
+      }
+    });
+    if (enableCORS) {
+      inputUrls = addPrefix(inputUrls);
+    }
+    if (inputUrls.length !== 0) {
+      renderATACTrack(igvDiv, inputUrls);
+    } else {
+      alert('No ATAC Track URL Input.');
+    }
+  });
+
+  igvDiv.appendChild(inputContainer);
+  igvDiv.appendChild(loadButton); // 将加载按钮添加到容器之外以确保位置固定
+}
+
+function createInputWrapper(canDelete) {
+  const inputWrapper = document.createElement('div');
+  inputWrapper.style.display = 'flex';
+  inputWrapper.style.alignItems = 'center';
+  inputWrapper.style.marginBottom = '10px';
+
+  const input = createInput();
+  inputWrapper.appendChild(input);
+
+  if (canDelete) {
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.style.marginLeft = '10px';
+    deleteButton.addEventListener('click', function () {
+      inputWrapper.remove();
+    });
+    inputWrapper.appendChild(deleteButton);
+  }
+
+  return inputWrapper;
+}
+
+function createInput() {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Input URL';
+  input.style.width = '300px';
+  input.style.display = 'block';
+  return input;
+}
+
+function addPrefix(urls){
+  return urls.map((element) => {
+    const encodedElement = encodeURIComponent(element);
+    return 'https://corsproxy.io/?' + encodedElement;
+  });
+}
+
+function generateConfig(urls) {
+  const getColor = (index) => {
+    const colors = [
+      "rgb(0,150,150)",
+      "rgb(150,0,150)",
+      "rgb(150,150,0)",
+      "rgb(0,150,0)",
+      "rgb(0,0,150)",
+      "rgb(150,0,0)",
+      "rgb(0,0,0)",
+      "rgb(255,0,0)",
+      "rgb(0,255,0)",
+      "rgb(0,0,255)"
+    ];
+    return colors[index % colors.length];
+  };
+
+  const config = {
+    reference: "hg38",
+    locus: "myc",
+    tracks: urls.map((url, index) => ({
+      name: "BigWig",
+      url: url,
+      color: getColor(index),
+      type: "wig",
+      format: "bigwig"
+    }))
+  };
+
+  return config;
+}
+
+function loadATAC(igvDiv, urls){
+  igvDiv.innerHTML = "";
+  let config = generateConfig(urls)
+  igv.createBrowser(igvDiv, config)
+          .then(function (browser) {
+            console.log("Created IGV browser");
+          })
+}
+
 function init(){
   if(!('bioInit' in window)){
     //----------------
@@ -2333,17 +2492,14 @@ function init(){
     var track = window.store.getState().config.atac_track;
     var igvDiv = document.getElementById("igv-div");
     console.log(track)
-    if (track !== "None"){
-      var loadButton = document.createElement('button')
-      loadButton.textContent = 'Click to load ATAC Track'
-      loadButton.addEventListener('click', function () {
-        loadATAC(igvDiv);
-      })
-      igvDiv.appendChild(loadButton)
-      // loadATAC(igvDiv);
-    }else{
-      igvDiv.innerText =  'No ATAC Track Loaded. You could use -atac <datapath> or --atac_track <datapath> to load your ATAC Track (.bigwig/.bw).'
-    }
+    // var loadButton = document.createElement('button')
+    // loadButton.textContent = 'Click to load ATAC Track'
+    // loadButton.addEventListener('click', function () {
+    //   loadATAC(igvDiv);
+    // })
+    // igvDiv.appendChild(loadButton)
+    initATACWelcomeScreen(igvDiv)
+
     var htmlCheck= "";
     for(i=0;i<grps.length;i++){
       var one = grps[i];
