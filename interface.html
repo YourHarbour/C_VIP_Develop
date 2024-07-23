@@ -2321,7 +2321,7 @@ function createRadio(id, labelText, checked) {
 }
 
 function initATACWelcomeScreen(igvDiv){
-	
+
   const enableCorsRadio = createRadio('enableCORS', 'Enable CORS Service', true);
   igvDiv.appendChild(enableCorsRadio);
 
@@ -2335,6 +2335,12 @@ function initATACWelcomeScreen(igvDiv){
   disableCorsRadio.addEventListener('click', function () {
     enableCORS = false;
   });
+
+  const hintMessage = document.createElement('div');
+  hintMessage.innerHTML = 'The CORS Proxy is provided by a free third-party company <a href="https://corsproxy.io/" target="_blank">CORS Proxy.io</a>';
+  hintMessage.style.color = 'red';
+  hintMessage.style.padding = '20px 0';
+  igvDiv.appendChild(hintMessage);
 
   const confirmButton = document.createElement('button');
   confirmButton.textContent = 'Confirm';
@@ -2373,6 +2379,7 @@ function initURIInputScreen(igvDiv) {
   loadButton.style.position = 'absolute';
   loadButton.style.right = '20px';
   loadButton.style.bottom = '20px';
+  loadButton.style.fontSize = '28px';
   loadButton.addEventListener('click', function () {
     inputUrls = [];
     const inputElements = inputContainer.querySelectorAll('input[type="text"]');
@@ -2434,6 +2441,15 @@ function addPrefix(urls){
   });
 }
 
+function extractUrlPart(url) {
+  let uri = url;
+  if(enableCORS){
+    uri = decodeURIComponent(url);
+  }
+  const match = uri.match(/\/([^\/]+)\.bw$/);
+  return match ? match[1] : null;
+}
+
 function generateConfig(urls) {
   const getColor = (index) => {
     const colors = [
@@ -2455,7 +2471,7 @@ function generateConfig(urls) {
     reference: "hg38",
     locus: "myc",
     tracks: urls.map((url, index) => ({
-      name: "BigWig",
+      name: extractUrlPart(url),
       url: url,
       color: getColor(index),
       type: "wig",
