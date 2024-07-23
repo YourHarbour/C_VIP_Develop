@@ -2305,7 +2305,7 @@ function createRadio(id, labelText, checked) {
   const radio = document.createElement('input');
   radio.type = 'radio';
   radio.id = id;
-  radio.name = 'corsOption'; // 设置相同的 name，以确保只能选择一个
+  radio.name = 'corsOption'; 
   radio.value = id;
   radio.checked = checked;
 
@@ -2321,12 +2321,10 @@ function createRadio(id, labelText, checked) {
 }
 
 function initATACWelcomeScreen(igvDiv){
-
-  // 创建“启用CORS”单选按钮
+	
   const enableCorsRadio = createRadio('enableCORS', 'Enable CORS Service', true);
   igvDiv.appendChild(enableCorsRadio);
 
-  // 创建“不适用CORS”单选按钮
   const disableCorsRadio = createRadio('disableCORS', 'Not Enable CORS Service', false);
   igvDiv.appendChild(disableCorsRadio);
 
@@ -2350,7 +2348,6 @@ function initATACWelcomeScreen(igvDiv){
 function renderATACTrack(igvDiv, urls) {
   console.log(urls)
   loadATAC(igvDiv, urls)
-  // 这里可以添加更多逻辑
 }
 
 function initURIInputScreen(igvDiv) {
@@ -2358,7 +2355,7 @@ function initURIInputScreen(igvDiv) {
   let inputUrls = [];
   const inputContainer = document.createElement('div');
 
-  const initialInputWrapper = createInputWrapper(false); // 第一个输入框不能删除
+  const initialInputWrapper = createInputWrapper(false); 
   inputContainer.appendChild(initialInputWrapper);
 
   const addButton = document.createElement('button');
@@ -2366,7 +2363,7 @@ function initURIInputScreen(igvDiv) {
   addButton.style.display = 'block';
   addButton.style.margin = '10px 0';
   addButton.addEventListener('click', function () {
-    const newInputWrapper = createInputWrapper(true); // 新增的输入框可以删除
+    const newInputWrapper = createInputWrapper(true); 
     inputContainer.insertBefore(newInputWrapper, addButton);
   });
   inputContainer.appendChild(addButton);
@@ -2380,7 +2377,7 @@ function initURIInputScreen(igvDiv) {
     inputUrls = [];
     const inputElements = inputContainer.querySelectorAll('input[type="text"]');
     inputElements.forEach((input) => {
-      const trimmedValue = input.value.trim(); // 去除首尾空白
+      const trimmedValue = input.value.trim(); 
       if (trimmedValue) {
         inputUrls.push(trimmedValue);
       }
@@ -2396,7 +2393,7 @@ function initURIInputScreen(igvDiv) {
   });
 
   igvDiv.appendChild(inputContainer);
-  igvDiv.appendChild(loadButton); // 将加载按钮添加到容器之外以确保位置固定
+  igvDiv.appendChild(loadButton); 
 }
 
 function createInputWrapper(canDelete) {
