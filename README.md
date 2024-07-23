@@ -30,7 +30,7 @@ Most of them are learned from [muon data official tutorial](https://muon-tutoria
    ```
 
 # Installation
-## 1. Install anaconda if not available on server
+## 1. Install anaconda if not available on server (Update to latest version your system support)
 ## 2. One step installation for VIPlight (without CLI, Command Line Interface for programming)
 Clone the repo
 ```
@@ -55,9 +55,16 @@ Users can change the conda env location by changing ```appPATH``` in the above s
 conda activate VIP (if not in this conda env)
 ./VIPlight launch <path/to/h5ad or h5mu> --host <IP> -p <port>
 ```
-2. Launch the VIP with ATAC Track Data
+2. ~~Launch the VIP with ATAC Track Data (Deprecated)~~
 ```
 ./VIPlight launch <path/to/h5ad or h5mu> -atac=<path/to/atac_track> or --atac_track=<path/to/atac_track>
+```
+3. Input ATAC Track (bigwig files) URLs in the VIP interface.
+
+# Update the application
+```
+git pull
+./update.VIPInterface.sh all
 ```
 
 # Debugging
