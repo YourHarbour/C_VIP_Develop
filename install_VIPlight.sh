@@ -37,8 +37,8 @@ if [[ -n "$CONDA_SSL" ]] &&  [[ -f "$CONDA_SSL" ]]; then
     echo -e "  REQUESTS_CA_BUNDLE: $CONDA_SSL" >> VIPlight_local.yml
     echo -e "  SSL_CERT_FILE: $CONDA_SSL" >> VIPlight_local.yml
 fi
-source $appEnvPath/etc/profile.d/conda.sh
-conda activate
+#source $appEnvPath/etc/profile.d/conda.sh
+conda activate VIP
 which python
 
 pip install --force-reinstall flask==2.2.3 flask-cors==3.0.10 flask-restful==0.3.9 flask-talisman==1.0.0 werkzeug==2.2.3 anndata==0.8.0 h5py==3.8.0 pandas==1.5.3 numpy==1.22.0
